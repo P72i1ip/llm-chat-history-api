@@ -1,0 +1,23 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv
+.env
+
+# VSCode
+.vscode/
+
+# 編譯產物
+dist/
+build/
+
+# Python (如果有)
+venv/
+__pycache__/
+
+# 其他
+*.log
+.DS_Store
