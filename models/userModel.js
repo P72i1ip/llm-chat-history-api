@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'A user must have a name'],
     trim: true,
     maxlength: [
-      40,
+      20,
       'A user name must have less or equal than 40 characters',
     ],
     minlength: [
