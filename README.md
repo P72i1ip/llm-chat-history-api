@@ -13,6 +13,8 @@ This project is a lightweight RESTful API designed to manage chat records from L
 - _(Optional)_ **JWT**: Basic authentication
 - _(Optional)_ **Docker**: Containerized deployment
 
+> ⚠️ **注意：請使用 Express 4.x 版本。Express 5.x 目前為 beta，可能導致路由解析錯誤（如 `Missing parameter name`），請勿使用 5.x。**
+
 ## Features
 
 - **CRUD Operations for Chat Records**
