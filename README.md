@@ -2,62 +2,64 @@
 
 ## Project Overview
 
-This project is a lightweight RESTful API designed to manage chat records from LLM (Large Language Model)-based conversations. The goal is to provide a backend service for creating, retrieving, searching, and managing chat histories, suitable for integration into SaaS products supporting AI applications.
+This project is a lightweight RESTful API for managing chat records from LLM (Large Language Model)-based conversations. It provides endpoints for creating, retrieving, searching, and managing chat histories, making it suitable for integration into SaaS products that support AI applications.
 
 ## Tech Stack
 
-- **Node.js** with **Express.js**: API server
+- **Node.js** with **Express.js** (v4.x): API server
 - **MongoDB** (Mongoose): Database
 - **Jest** or **Postman**: API testing
 - **Swagger/OpenAPI**: API documentation
-- _(Optional)_ **JWT**: Basic authentication
+- _(Optional)_ **JWT**: User authentication & authorization
 - _(Optional)_ **Docker**: Containerized deployment
 
-> ⚠️ **注意：請使用 Express 4.x 版本。Express 5.x 目前為 beta，可能導致路由解析錯誤（如 `Missing parameter name`），請勿使用 5.x。**
+> ⚠️ **Note:** Please use Express 4.x. Express 5.x is still in beta and may cause routing issues (e.g., `Missing parameter name`). Do not use 5.x.
 
 ## Features
 
-- **CRUD Operations for Chat Records**
-  - Create new chat records
-  - Retrieve all chat records
-  - Retrieve a single chat record
-  - Update chat records
-  - Delete chat records
+- **User Authentication (Optional)**
+  - Secure registration and login (bcrypt + JWT)
+  - HTTP-only cookie for token delivery
+- **CRUD Operations for Chat Messages**
+  - Create, retrieve, update, and delete chat messages
+- **Filtering & Search**
+  - Filter messages by timestamp, tags
+  - Keyword search using MongoDB text indexes
 - **Tagging/Labeling (Optional)**
-  - Add tags or labels to chat records
-- **Search**
-  - Search chat records by keywords or timestamps
+  - Add tags or labels to chat messages
 - **API Documentation**
-  - Interactive API docs via Swagger/OpenAPI
-- **(Optional) JWT Authentication**
-  - Basic user authentication and authorization
+  - Interactive docs via Swagger/OpenAPI (`/api-docs`)
+- **Testing**
+  - Manual testing with Postman or automated with Jest
 - **(Optional) Docker Support**
   - Dockerfile for easy local deployment
 
 ## Progress Checklist
 
-- [ ] Project initialization and basic structure
-- [ ] MongoDB schema design
-- [ ] CRUD API implementation
-- [ ] Search and tagging features
+- [x] Project initialization and structure
+- [x] MongoDB schema design
+- [x] User authentication (optional)
+- [ ] CRUD API for chat messages
+- [ ] Filtering, tagging, and search features
 - [ ] API documentation (Swagger)
 - [ ] Testing (Jest/Postman)
-- [ ] JWT authentication (optional)
 - [ ] Dockerfile (optional)
-- [ ] Final README and project cleanup
+- [x] Final README and cleanup
 
 ## Getting Started
 
-1. Clone the repository and install dependencies:
+1. **Clone the repository and install dependencies:**
 
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/P72i1ip/llm-chat-history-api.git
    cd llm-chat-history-api
    npm install
    ```
 
-2. Set up your `.env` file (see `.env.example` for reference)
-3. Start the server:
+2. **Set up your environment variables:**  
+   Copy `.env.example` to `.env` and fill in the required values.
+
+3. **Start the server:**
 
    ```bash
    npm start
@@ -65,7 +67,8 @@ This project is a lightweight RESTful API designed to manage chat records from L
 
 ## Additional Notes
 
-- API documentation will be available at `/api-docs` (Swagger UI)
+- API documentation is available at `/api-docs` (Swagger UI).
+- All endpoints and sample requests/responses are documented in the README and Swagger.
 - Contributions and issues are welcome!
 
 ---
