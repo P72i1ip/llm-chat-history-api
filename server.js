@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
+dotenv.config();
 import mongoose from 'mongoose';
+import app from './app.js';
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -8,17 +10,14 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-dotenv.config();
-import app from './app.js';
-
-// console.log(process.env.NODE_ENV);
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
-  process.env.DATABASE_PASSWORD,
+  process.env.DATABASE_PASSWORD
 );
 
 mongoose.connect(DB).then(() => {
   console.log('DB connection successful');
+  // console.log(process.env.NODE_ENV);
 });
 
 const port = process.env.PORT || 3000;
