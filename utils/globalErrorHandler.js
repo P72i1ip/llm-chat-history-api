@@ -8,7 +8,8 @@ const handleCastErrorDB = (err) => {
 
 const handleDuplicateFieldsDB = (err) => {
   // Handle Mongoose duplicate key error
-  const value = err.keyValue.name; // Assuming 'name' is the field that is duplicated
+  // const value = err.keyValue.name; // Assuming 'name' is the field that is duplicated
+  const value = Object.values(err.keyValue).join(', ');
   const message = `Duplicate field value: "${value}". Please use another value!`;
   return new AppError(message, 400);
 };

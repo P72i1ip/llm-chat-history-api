@@ -9,35 +9,48 @@ const conversationSchema = new mongoose.Schema({
       'A conversation must belong to a user',
     ],
   },
-  messages: [
-    {
-      role: {
-        type: String,
-        enum: ['user', 'assistant'],
-        required: [true, 'Message role is required'],
+  messages: {
+    type: [
+      {
+        role: {
+          type: String,
+          enum: ['user', 'assistant'],
+          required: [true, 'Message role is required'],
+        },
+        content: {
+          type: String,
+          required: [true, 'Message content is required'],
+          minlength: [1, 'Message content cannot be empty'],
+          maxlength: [2000, 'Message content is too long'],
+        },
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
       },
-      content: {
-        type: String,
-        required: [true, 'Message content is required'],
-        minlength: [1, 'Message content cannot be empty'],
-        maxlength: [2000, 'Message content is too long'],
+    ],
+    required: [
+      true,
+      'A conversation must have at least one message',
+    ],
+    validate: {
+      validator: function (arr) {
+        return Array.isArray(arr) && arr.length > 0;
       },
-      timestamp: {
-        type: Date,
-        default: Date.now,
-      },
+      message:
+        'A conversation must have at least one message',
     },
-  ],
+  },
   tags: {
     type: [String],
     enum: ['important', 'work', 'personal', 'archive'],
     default: [],
     validate: {
       validator: function (arr) {
-        // 限制標籤數量最多 5 個
-        return arr.length <= 5;
+        // 限制標籤數量最多 4 個
+        return arr.length <= 4;
       },
-      message: 'You can assign up to 5 tags only.',
+      message: 'You can assign up to 4 tags only.',
     },
   },
   createdAt: {
@@ -45,7 +58,12 @@ const conversationSchema = new mongoose.Schema({
     default: Date.now,
     immutable: true,
   },
-  updatedAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: undefined },
+});
+
+conversationSchema.pre('findOneAndUpdate', function (next) {
+  this.set({ updatedAt: Date.now() });
+  next();
 });
 
 export const Conversation = mongoose.model(

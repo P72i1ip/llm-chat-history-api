@@ -4,6 +4,7 @@ import express from 'express';
 import morgan from 'morgan'; // Import morgan for logging HTTP requests
 
 import userRoutes from './routes/userRoutes.js'; // Import user routes
+import convsationRoutes from './routes/conversationRoutes.js'; // Import conversation routes
 import globalErrorHandler from './utils/globalErrorHandler.js'; // Import global error handler
 import AppError from './utils/appError.js'; // Import AppError class
 
@@ -22,6 +23,7 @@ app.use(express.static('public'));
 
 // 2. Routes
 app.use('/api/v1/users', userRoutes); // Use user routes for the /api/v1/users endpoint
+app.use('/api/v1/conversations', convsationRoutes); // Use conversation routes for the /api/v1/conversations endpoint
 app.all('*', (req, res, next) => {
   // Handle all other routes that are not defined
   next(

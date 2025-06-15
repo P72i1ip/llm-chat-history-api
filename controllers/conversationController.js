@@ -1,83 +1,105 @@
+/* eslint-disable no-unused-vars */
 import { Conversation } from '../models/conversationModel.js';
 import catchAsync from '../utils/catchAsync.js';
+import AppError from '../utils/appError.js';
 
-// Create a new conversation
+// POST /api/v1/conversations
 export const createConversation = catchAsync(
-  async (req, res) => {
-    const conversation = await Conversation.create(
-      req.body
-    );
-    res
-      .status(201)
-      .json({ status: 'success', data: conversation });
-  }
-);
-
-// Get all conversations
-export const getAllConversations = catchAsync(
-  async (req, res) => {
-    const conversations = await Conversation.find();
-    res.status(200).json({
+  async (req, res, next) => {
+    const conversation = await Conversation.create({
+      user: req.user._id, // 需登入，從 JWT 取得 user id
+      messages: req.body.messages,
+      tags: req.body.tags,
+    });
+    res.status(201).json({
       status: 'success',
-      results: conversations.length,
-      data: conversations,
+      data: { conversation },
     });
   }
 );
 
-// Get a single conversation by ID
+// GET /api/v1/conversations
+export const getAllConversations = catchAsync(
+  async (req, res, next) => {
+    const conversations = await Conversation.find({
+      user: req.user._id,
+    });
+    res.status(200).json({
+      status: 'success',
+      results: conversations.length,
+      data: { conversations },
+    });
+  }
+);
+
+// GET /api/v1/conversations/:id
 export const getConversation = catchAsync(
-  async (req, res) => {
-    const conversation = await Conversation.findById(
-      req.params.id
-    );
-    if (!conversation) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Conversation not found',
-      });
-    }
-    res
-      .status(200)
-      .json({ status: 'success', data: conversation });
-  }
-);
-
-// Update a conversation by ID
-export const updateConversation = catchAsync(
-  async (req, res) => {
-    const conversation =
-      await Conversation.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        {
-          new: true,
-          runValidators: true,
-        }
+  async (req, res, next) => {
+    const conversation = await Conversation.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+    if (!conversation)
+      return next(
+        new AppError('No conversation found', 404)
       );
-    if (!conversation) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Conversation not found',
-      });
-    }
-    res
-      .status(200)
-      .json({ status: 'success', data: conversation });
+    res.status(200).json({
+      status: 'success',
+      data: { conversation },
+    });
   }
 );
 
-// Delete a conversation by ID
-export const deleteConversation = catchAsync(
-  async (req, res) => {
+// PATCH /api/v1/conversations/:id
+export const updateConversation = catchAsync(
+  async (req, res, next) => {
     const conversation =
-      await Conversation.findByIdAndDelete(req.params.id);
-    if (!conversation) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Conversation not found',
+      await Conversation.findOneAndUpdate(
+        { _id: req.params.id, user: req.user._id },
+        req.body,
+        { new: true, runValidators: true }
+      );
+    if (!conversation)
+      return next(
+        new AppError('No conversation found', 404)
+      );
+    res.status(200).json({
+      status: 'success',
+      data: { conversation },
+    });
+  }
+);
+
+// PATCH /api/v1/conversations/:id
+export const appendMessage = catchAsync(async (req, res, next) => {
+  const newMessage = req.body.message; // 應該是一個物件 {role, content, ...}
+
+  const conversation = await Conversation.findOneAndUpdate(
+    { _id: req.params.id, user: req.user._id },
+    { $push: { messages: newMessage } }, // 用 $push 追加
+    { new: true, runValidators: true }
+  );
+
+  if (!conversation) return next(new AppError('No conversation found', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: { conversation },
+  });
+});
+
+// DELETE /api/v1/conversations/:id
+export const deleteConversation = catchAsync(
+  async (req, res, next) => {
+    const conversation =
+      await Conversation.findOneAndDelete({
+        _id: req.params.id,
+        user: req.user._id,
       });
-    }
+    if (!conversation)
+      return next(
+        new AppError('No conversation found', 404)
+      );
     res.status(204).json({ status: 'success', data: null });
   }
 );
