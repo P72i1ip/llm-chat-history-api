@@ -39,7 +39,7 @@ This project is a lightweight RESTful API for managing chat records from LLM (La
 - [x] Project initialization and structure
 - [x] MongoDB schema design
 - [x] User authentication (optional)
-- [ ] CRUD API for chat messages
+- [x] CRUD API for chat messages
 - [ ] Filtering, tagging, and search features
 - [ ] API documentation (Swagger)
 - [ ] Testing (Jest/Postman)
