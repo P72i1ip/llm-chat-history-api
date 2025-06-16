@@ -21,9 +21,69 @@ export const createConversation = catchAsync(
 // GET /api/v1/conversations
 export const getAllConversations = catchAsync(
   async (req, res, next) => {
-    const conversations = await Conversation.find({
-      user: req.user._id,
-    });
+    const filter = { user: req.user._id };
+
+    // Tag filter
+    if (req.query.tags) {
+      const tags = req.query.tags.split(',');
+      filter.tags = { $all: tags };
+    }
+
+    // createdAt filter (only if createdOnly is true)
+    if (
+      req.query.createdOnly === 'true' &&
+      (req.query.from || req.query.to)
+    ) {
+      filter.createdAt = {};
+      if (req.query.from)
+        filter.createdAt.$gte = new Date(req.query.from);
+      if (req.query.to)
+        filter.createdAt.$lte = new Date(req.query.to);
+    }
+
+    // default message.timestamp filter
+    if (
+      (!req.query.createdOnly ||
+        req.query.createdOnly !== 'true') &&
+      (req.query.from || req.query.to)
+    ) {
+      filter.messages = {
+        $elemMatch: {
+          timestamp: {
+            ...(req.query.from && {
+              $gte: new Date(req.query.from),
+            }),
+            ...(req.query.to && {
+              $lte: new Date(req.query.to),
+            }),
+          },
+        },
+      };
+    }
+
+    const conversations = await Conversation.find(filter);
+
+    // filter messages by timestamp if createdOnly is false
+    if (
+      (!req.query.createdOnly ||
+        req.query.createdOnly !== 'true') &&
+      (req.query.from || req.query.to)
+    ) {
+      const from = req.query.from
+        ? new Date(req.query.from)
+        : null;
+      const to = req.query.to
+        ? new Date(req.query.to)
+        : null;
+
+      conversations.forEach((conv) => {
+        conv.messages = conv.messages.filter((msg) => {
+          const t = new Date(msg.timestamp);
+          return (!from || t >= from) && (!to || t <= to);
+        });
+      });
+    }
+
     res.status(200).json({
       status: 'success',
       results: conversations.length,
@@ -71,22 +131,28 @@ export const updateConversation = catchAsync(
 );
 
 // PATCH /api/v1/conversations/:id
-export const appendMessage = catchAsync(async (req, res, next) => {
-  const newMessage = req.body.message; // 應該是一個物件 {role, content, ...}
+export const appendMessage = catchAsync(
+  async (req, res, next) => {
+    const newMessage = req.body.message; // 應該是一個物件 {role, content, ...}
 
-  const conversation = await Conversation.findOneAndUpdate(
-    { _id: req.params.id, user: req.user._id },
-    { $push: { messages: newMessage } }, // 用 $push 追加
-    { new: true, runValidators: true }
-  );
+    const conversation =
+      await Conversation.findOneAndUpdate(
+        { _id: req.params.id, user: req.user._id },
+        { $push: { messages: newMessage } }, // 用 $push 追加
+        { new: true, runValidators: true }
+      );
 
-  if (!conversation) return next(new AppError('No conversation found', 404));
+    if (!conversation)
+      return next(
+        new AppError('No conversation found', 404)
+      );
 
-  res.status(200).json({
-    status: 'success',
-    data: { conversation },
-  });
-});
+    res.status(200).json({
+      status: 'success',
+      data: { conversation },
+    });
+  }
+);
 
 // DELETE /api/v1/conversations/:id
 export const deleteConversation = catchAsync(
