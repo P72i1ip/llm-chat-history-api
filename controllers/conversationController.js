@@ -61,6 +61,14 @@ export const getAllConversations = catchAsync(
       };
     }
 
+    // keyword search（messages.content）
+    if (req.query.keyword) {
+      filter['messages.content'] = {
+        $regex: req.query.keyword,
+        $options: 'i',
+      };
+    }
+
     const conversations = await Conversation.find(filter);
 
     // filter messages by timestamp if createdOnly is false
@@ -81,6 +89,16 @@ export const getAllConversations = catchAsync(
           const t = new Date(msg.timestamp);
           return (!from || t >= from) && (!to || t <= to);
         });
+      });
+    }
+
+    // filter messages by keyword if provided
+    if (req.query.keyword) {
+      const regex = new RegExp(req.query.keyword, 'i');
+      conversations.forEach((conv) => {
+        conv.messages = conv.messages.filter((msg) =>
+          regex.test(msg.content)
+        );
       });
     }
 
