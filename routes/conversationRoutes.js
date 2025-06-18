@@ -11,6 +11,8 @@
  *   get:
  *     summary: Get all conversations for the current user
  *     tags: [Conversations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: tags
@@ -45,6 +47,8 @@
  *   post:
  *     summary: Create a new conversation
  *     tags: [Conversations]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -77,6 +81,8 @@
  *   get:
  *     summary: Get a conversation by ID
  *     tags: [Conversations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -90,6 +96,8 @@
  *   patch:
  *     summary: Update a conversation by ID
  *     tags: [Conversations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -124,6 +132,8 @@
  *   delete:
  *     summary: Delete a conversation by ID
  *     tags: [Conversations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -142,6 +152,8 @@
  *   post:
  *     summary: Append a new message to a conversation
  *     tags: [Conversations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

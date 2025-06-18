@@ -10,22 +10,22 @@ This project is a lightweight RESTful API for managing chat records from LLM (La
 - **MongoDB** (Mongoose): Database
 - **Jest** or **Postman**: API testing
 - **Swagger/OpenAPI**: API documentation
-- _(Optional)_ **JWT**: User authentication & authorization
+- **JWT**: User authentication & authorization
 - _(Optional)_ **Docker**: Containerized deployment
 
 > ⚠️ **Note:** Please use Express 4.x. Express 5.x is still in beta and may cause routing issues (e.g., `Missing parameter name`). Do not use 5.x.
 
 ## Features
 
-- **User Authentication (Optional)**
+- **User Authentication**
   - Secure registration and login (bcrypt + JWT)
   - HTTP-only cookie for token delivery
 - **CRUD Operations for Chat Messages**
   - Create, retrieve, update, and delete chat messages
 - **Filtering & Search**
   - Filter messages by timestamp, tags
-  - Keyword search using MongoDB text indexes
-- **Tagging/Labeling (Optional)**
+  - Keyword search (regex-based; text index planned for future)
+- **Tagging/Labeling**
   - Add tags or labels to chat messages
 - **API Documentation**
   - Interactive docs via Swagger/OpenAPI (`/api-docs`)
@@ -40,9 +40,9 @@ This project is a lightweight RESTful API for managing chat records from LLM (La
 - [x] MongoDB schema design
 - [x] User authentication (optional)
 - [x] CRUD API for chat messages
-- [ ] Filtering, tagging, and search features
-- [ ] API documentation (Swagger)
-- [ ] Testing (Jest/Postman)
+- [x] Filtering, tagging, and search features
+- [x] API documentation (Swagger)
+- [x] Testing (Jest/Postman)
 - [ ] Dockerfile (optional)
 - [x] Final README and cleanup
 
@@ -65,10 +65,18 @@ This project is a lightweight RESTful API for managing chat records from LLM (La
    npm start
    ```
 
+4. **API Documentation:**  
+   Visit [http://localhost:3000/api-docs](http://localhost:3000/api-docs) for interactive Swagger UI.
+
+## Usage
+
+- Use Postman or Swagger UI to test all endpoints.
+- For JWT-protected routes, login first and use the returned token as a Bearer token or via cookie.
+- Example requests and responses are available in Swagger UI.
+
 ## Additional Notes
 
-- API documentation is available at `/api-docs` (Swagger UI).
-- All endpoints and sample requests/responses are documented in the README and Swagger.
-- Contributions and issues are welcome!
+- All endpoints and sample requests/responses are documented in Swagger.
+- Future improvements: Dockerfile, advanced search (text index), and more automated tests.
 
 ---
