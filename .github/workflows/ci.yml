@@ -1,0 +1,57 @@
+# 為你的工作流程命名，會顯示在 GitHub Actions 頁面上
+name: Node.js CI
+
+# 設定觸發這個工作流程的事件
+on:
+  # 當有程式碼 push 到 main 分支時觸發
+  push:
+    branches: [ "main" ]
+  # 當有 pull request 被建立並指向 main 分支時觸發
+  pull_request:
+    branches: [ "main" ]
+
+# 定義工作流程中要執行的所有工作 (jobs)
+jobs:
+  # 我們只有一個工作，命名為 build-and-test
+  build-and-test:
+    # 指定這個工作要在什麼樣的虛擬環境中執行，'ubuntu-latest' 是最常用且經濟的選擇
+    runs-on: ubuntu-latest
+
+    # 定義這個工作要執行的所有步驟 (steps)
+    steps:
+      # 第一步：取得程式碼
+      # 使用官方的 actions/checkout 動作，將你的儲存庫程式碼下載到虛擬機中
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 第二步：設定 Node.js 環境
+      # 使用官方的 actions/setup-node 動作，安裝指定版本的 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          # 使用快取來加速 npm install 的過程
+          cache: 'npm'
+
+      # 第三步：安裝依賴套件
+      # 執行 npm ci，它比 npm install 更適合在 CI 環境中，速度更快且更穩定
+      - name: Install dependencies
+        run: npm ci
+
+      # 第四步：執行程式碼風格檢查 (Linter) - 這是個好習慣
+      # 假設你的 package.json 中有 "lint" 這個 script
+      # - name: Run linter
+      #   run: npm run lint --if-present
+
+      # 第五步：執行測試
+      # ⚠️ 注意：因為你還沒有測試檔案，這一步會失敗！
+      # 你可以先註解掉這兩行，等未來加入測試後再打開。
+      # 或者，你可以先在 package.json 的 "scripts" 中加入 "test": "echo \"Error: no test specified\" && exit 1"
+      - name: Run tests
+        run: npm test
+
+      # 第六步：建置 Docker 映像檔
+      # 這一步只建置，不推送到任何倉庫。
+      # 目的是驗證 Dockerfile 是否能成功執行，確保應用程式可以被打包。
+      - name: Build Docker image
+        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
