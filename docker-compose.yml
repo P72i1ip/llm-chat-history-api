@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  # 我們現在只需要 app 這一個服務
+  app:
+    build: .
+    ports:
+      - "8000:8000" # 保持 port 映射不變
+    env_file:
+      - .env # 繼續讀取 .env 檔案
+
+# mongo 服務已移除
+# depends_on 已移除
+# volumes 已移除
