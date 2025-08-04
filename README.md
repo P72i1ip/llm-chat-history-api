@@ -9,30 +9,21 @@ This project is a lightweight RESTful API for managing chat records from LLM (La
 - **Node.js** with **Express.js** (v4.x): API server
 - **MongoDB** (Mongoose): Database
 - **Docker**: Containerization
-- **Jest** or **Postman**: API testing
-- **Swagger/OpenAPI**: API documentation
 - **JWT**: User authentication & authorization
+- **Swagger/OpenAPI**: API documentation
+- **Jest** or **Postman**: API testing
 
 > ⚠️ **Note:** Please use Express 4.x. Express 5.x is still in beta and may cause routing issues (e.g., `Missing parameter name`). Do not use 5.x.
 
 ## Features
 
-- **User Authentication**
-  - Secure registration and login (bcrypt + JWT)
-  - HTTP-only cookie for token delivery
-- **CRUD Operations for Chat Messages**
-  - Create, retrieve, update, and delete chat messages
-- **Filtering & Search**
-  - Filter messages by timestamp, tags
-  - Keyword search (regex-based; text index planned for future)
-- **Tagging/Labeling**
-  - Add tags or labels to chat messages
-- **API Documentation**
-  - Interactive docs via Swagger/OpenAPI (`/api-docs`)
-- **Testing**
-  - Manual testing with Postman or automated with Jest
-- **Docker Support**
-  - `Dockerfile` and `docker-compose.yml` for easy local deployment
+- **User Management**: User registration and login (optional).
+- **Authentication**: Secure endpoints using JSON Web Tokens (JWT).
+- **CRUD Operations**: Create, Read, Update, and Delete chat messages.
+- **Search & Filter**: Search by keywords and filter by tags or date ranges.
+- **API Documentation**: Interactive API documentation powered by Swagger.
+- **Testing**: Manual testing with Postman or automated with Jest.
+- **Docker Support**: `Dockerfile` and `docker-compose.yml` for easy local deployment.
 
 ## Progress Checklist
 
@@ -45,8 +36,6 @@ This project is a lightweight RESTful API for managing chat records from LLM (La
 - [x] Testing (Jest/Postman)
 - [x] Dockerfile & Docker Compose setup
 - [x] Final README and cleanup
-
----
 
 ## Getting Started
 
@@ -65,22 +54,19 @@ cd llm-chat-history-api
 
 The application requires environment variables to connect to the database and configure settings.
 
-1. Create a `.env` file in the project root. You can copy the example file:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Open the `.env` file and fill in your values, especially for `DATABASE` and `JWT_SECRET`.
-3. **Important:** Ensure the `PORT` is set to `8000` for consistency with the Docker setup.
-
-   ```dotenv
-   # .env
-   PORT=8000
-   DATABASE=mongodb+srv://...
-   JWT_SECRET=...
-   # ... other variables
-   ```
+1.  Create a `.env` file in the project root. You can copy the example file:
+    ```bash
+    cp .env.example .env
+    ```
+2.  Open the `.env` file and fill in your values, especially for `DATABASE` and `JWT_SECRET`.
+3.  **Important:** Ensure the `PORT` is set to `8000` for consistency with the Docker setup.
+    ```dotenv
+    # .env
+    PORT=8000
+    DATABASE=mongodb+srv://...
+    JWT_SECRET=...
+    # ... other variables
+    ```
 
 ### 3. Run the Application
 
@@ -120,19 +106,26 @@ This method runs the application directly on your machine.
 
 **Instructions:**
 
-1. Install the project dependencies:
-
-   ```bash
-   npm install
-   ```
-
-2. Start the development server:
-
-   ```bash
-   npm start
-   ```
+1.  Install the project dependencies:
+    ```bash
+    npm install
+    ```
+2.  Start the development server:
+    ```bash
+    npm start
+    ```
 
 The API will be available at `http://localhost:8000`.
+
+---
+
+## 🚀 Deployment
+
+This project has been successfully deployed to **AWS ECS Fargate**.
+
+For a detailed, end-to-end guide on the deployment process, including IAM setup, ECR push, and ECS service creation, please refer to the separate deployment guide.
+
+➡️ **[View Full AWS Deployment Guide](./docs/DEPLOYMENT.md)**
 
 ---
 
@@ -142,17 +135,13 @@ Once the application is running (using either method), you can access the intera
 
 - **URL:** [http://localhost:8000/api-docs](http://localhost:8000/api-docs)
 
----
-
 ## Usage
 
-- Use Postman or Swagger UI to test all endpoints.
-- For JWT-protected routes, login first and use the returned token as a Bearer token or via cookie.
-- Example requests and responses are available in Swagger UI.
+- Use Postman or the Swagger UI to test all endpoints.
+- For JWT-protected routes, log in first and use the returned token as a Bearer token in the `Authorization` header.
+- Example requests and responses are available in the Swagger UI.
 
 ## Additional Notes
 
 - All endpoints and sample requests/responses are documented in Swagger.
-- Future improvements: advanced search (text index), more automated tests, and CI/CD pipeline setup.
-
----
+- Future improvements: advanced search (text index), more automated tests, and a CI/CD pipeline
